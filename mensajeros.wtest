@@ -78,8 +78,3 @@ describe "Test de mensajeros primera parte " {
 	    assert.notThat(paquete.puedeSerEntregadoPor(morfeo))
     }
 }
-
-
-
-
-
