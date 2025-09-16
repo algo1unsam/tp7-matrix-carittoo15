@@ -1,8 +1,105 @@
 import mensajeria.*
 import mensajeros.*
 
+describe "2" {
 
-describe "2 " {}
+test "contrato mensajeros" {
+    mensajeria.despedirATodos()
+    mensajeria.contratar(morfeo)
+    mensajeria.contratar(trinity)
+    assert.equals(2, mensajeria.empleados().size())
+}
+
+test "despido un mensajero" {
+    mensajeria.despedirATodos()
+    mensajeria.contratar(morfeo)
+    mensajeria.contratar(trinity)
+    mensajeria.despedir(morfeo)
+    assert.equals([trinity], mensajeria.empleados())
+}
+test "despido a todos" {
+    mensajeria.despedirATodos()
+    mensajeria.contratar(morfeo)
+    mensajeria.contratar(trinity)
+    mensajeria.despedirATodos()
+    assert.equals(0, mensajeria.empleados().size())
+}
 
 
-describe "3 " {}
+    test "mensajeria es grande si tiene más de 2 empleados" {
+        mensajeria.contratar(morfeo)
+        mensajeria.contratar(trinity)
+        mensajeria.contratar(neo)
+        assert.that(mensajeria.esGrande())
+    }
+
+    test "1er empleado puede entregar paquete" {
+        paquete.pagado(true)
+        paquete.destino(puente)
+        morfeo.transporte(monopatin)
+        mensajeria.despedirATodos()
+        mensajeria.contratar(morfeo)
+        assert.that(mensajeria.puedeEntregarPrimer(paquete))
+    }
+
+    test "peso del ult mensajero" {
+        morfeo.transporte(camion)
+        camion.acoplados(1)
+        mensajeria.despedirATodos()
+        mensajeria.contratar(trinity)
+        mensajeria.contratar(morfeo)
+        assert.equals(590, mensajeria.pesoUltimoMensajero())
+    }
+}
+
+
+describe "3" {
+    test "al menos un mensajero puede entregar el paquete" {
+        mensajeria.despedirATodos()
+        paquetonViajero.montoPagado(200)
+        mensajeria.contratar(trinity)
+        assert.that(mensajeria.puedeEntregar(paquetonViajero))
+    }
+
+    test "mensajeros que pueden entregar el paquete" {
+        mensajeria.despedirATodos()
+        paquetonViajero.montoPagado(200)
+        mensajeria.contratar(trinity)
+        mensajeria.contratar(morfeo)
+        assert.equals([trinity], mensajeria.quienesPuedenEntregar(paquetonViajero))
+    }
+
+    test "tieneSobrepeso si supera 500kg" {
+        mensajeria.despedirATodos()
+        camion.acoplados(2)
+        morfeo.transporte(camion)
+        mensajeria.contratar(morfeo)
+        mensajeria.contratar(trinity)
+        assert.that(mensajeria.tieneSobrepeso())
+    }
+
+    test "suma facturacion si el paquete puede ser entregado" {
+        mensajeria.despedirATodos()
+        mensajeria.facturacion(0)
+        paquetonViajero.montoPagado(200)
+        mensajeria.contratar(trinity)
+        mensajeria.enviar(paquetonViajero)
+        assert.equals(200, mensajeria.obtenerFacturacion())
+    }
+
+    test "agrego a pendiente si no se entrega en el momento" {
+        mensajeria.despedirATodos()
+        paquetonViajero.montoPagado(0)
+        mensajeria.contratar(trinity)
+        mensajeria.enviar(paquetonViajero)
+        assert.that(mensajeria.paquetesPendientes().contains(paquetonViajero))
+    }
+
+    test "enviarTodos" {
+        mensajeria.despedirATodos()
+        paquetonViajero.montoPagado(200)
+        mensajeria.contratar(trinity)
+        mensajeria.enviarTodos([paquetito, paquetonViajero])
+        assert.equals(200, mensajeria.obtenerFacturacion())
+    }
+}
