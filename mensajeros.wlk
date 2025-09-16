@@ -62,3 +62,22 @@ object paquete {
 object usuario {
     var property cantidadDinero = 100
 }
+object paquetito {
+    const property precio = 0
+
+    method estaPago() = true
+    method puedeSerEntregadoPor(mensajero) = true
+    method destino() = puente 
+}
+
+object paquetonViajero {
+    var property destinos = #{puente, matrix}
+    var property montoPagado = 0
+
+    method precio() = destinos.size() * 100
+    method estaPago() = montoPagado >= self.precio()
+    method destino() = self.destinos() 
+
+    method puedeSerEntregadoPor(mensajero) =
+        self.estaPago() && destinos.all({destino => destino.dejarPasar(mensajero)})
+}
